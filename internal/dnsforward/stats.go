@@ -150,18 +150,11 @@ func (s *Server) updateStats(dctx *dnsContext, clientIP string, processingTime t
 		upstreamStats = append(upstreamStats, qs.Fallback()...)
 	}
 
-	cached := false
-	if qs := pctx.QueryStatistics(); qs != nil {
-		ms := qs.Main()
-		cached = len(ms) == 1 && ms[0].IsCached
-	}
-
 	e := &stats.Entry{
 		UpstreamStats:  upstreamStats,
 		Domain:         aghnet.NormalizeDomain(pctx.Req.Question[0].Name),
 		Result:         stats.RNotFiltered,
 		ProcessingTime: processingTime,
-		Cached:         cached,
 	}
 
 	if clientID := dctx.clientID; clientID != "" {

@@ -73,9 +73,6 @@ type Entry struct {
 	// ProcessingTime is the duration of the request processing from the start
 	// of the request including timeouts.
 	ProcessingTime time.Duration
-
-	// Cached shows if the response was served from cache.
-	Cached bool
 }
 
 // validate returns an error if entry is not valid.
@@ -125,9 +122,6 @@ type unit struct {
 
 	// nTotal stores the total number of requests.
 	nTotal uint64
-
-	// nCached stores the total number of cached requests.
-	nCached uint64
 
 	// timeSum stores the sum of processing time in microseconds of each request
 	// written by the unit.
@@ -180,9 +174,6 @@ type unitDB struct {
 
 	// NTotal is the total number of requests.
 	NTotal uint64
-
-	// NCached is the total number of cached requests.
-	NCached uint64
 
 	// TimeAvg is the average of processing times in microseconds of all the
 	// requests in the unit.
@@ -272,7 +263,6 @@ func (u *unit) serialize() (udb *unitDB) {
 
 	return &unitDB{
 		NTotal:             u.nTotal,
-		NCached:            u.nCached,
 		NResult:            append([]uint64{}, u.nResult...),
 		Domains:            convertMapToSlice(u.domains, maxDomains),
 		BlockedDomains:     convertMapToSlice(u.blockedDomains, maxDomains),
@@ -314,7 +304,6 @@ func (u *unit) deserialize(udb *unitDB) {
 	}
 
 	u.nTotal = udb.NTotal
-	u.nCached = udb.NCached
 	u.nResult = make([]uint64, resultLast)
 	copy(u.nResult, udb.NResult)
 	u.domains = convertSliceToMap(udb.Domains)
@@ -338,9 +327,6 @@ func (u *unit) add(e *Entry) {
 	pt := uint64(e.ProcessingTime.Microseconds())
 	u.timeSum += pt
 	u.nTotal++
-	if e.Cached {
-		u.nCached++
-	}
 
 	for _, s := range e.UpstreamStats {
 		if s.IsCached || s.Error != nil {
@@ -435,7 +421,6 @@ func (s *StatsCtx) getData(limit uint32) (resp *StatsResp, ok bool) {
 			TopUpstreamsAvgTime:   []topAddrsFloat{},
 
 			BlockedFiltering:     []uint64{},
-			CachedDNSQueries:     []uint64{},
 			DNSQueries:           []uint64{},
 			ReplacedParental:     []uint64{},
 			ReplacedSafebrowsing: []uint64{},
@@ -471,7 +456,6 @@ func (s *StatsCtx) dataFromUnits(units []*unitDB, curID uint32) (resp *StatsResp
 	var timeN uint32
 	for _, u := range units {
 		sum.NTotal += u.NTotal
-		sum.NCached += u.NCached
 		sum.TimeAvg += u.TimeAvg
 		if u.TimeAvg != 0 {
 			timeN++
@@ -483,7 +467,6 @@ func (s *StatsCtx) dataFromUnits(units []*unitDB, curID uint32) (resp *StatsResp
 	}
 
 	resp.NumDNSQueries = sum.NTotal
-	resp.NumCachedDNSQueries = sum.NCached
 	resp.NumBlockedFiltering = sum.NResult[RFiltered]
 	resp.NumReplacedSafebrowsing = sum.NResult[RSafeBrowsing]
 	resp.NumReplacedSafesearch = sum.NResult[RSafeSearch]
@@ -508,7 +491,6 @@ func (s *StatsCtx) fillCollectedStats(data *StatsResp, units []*unitDB, curID ui
 	}
 
 	data.DNSQueries = make([]uint64, size)
-	data.CachedDNSQueries = make([]uint64, size)
 	data.BlockedFiltering = make([]uint64, size)
 	data.ReplacedSafebrowsing = make([]uint64, size)
 	data.ReplacedParental = make([]uint64, size)
@@ -521,7 +503,6 @@ func (s *StatsCtx) fillCollectedStats(data *StatsResp, units []*unitDB, curID ui
 
 	for i, u := range units {
 		data.DNSQueries[i] += u.NTotal
-		data.CachedDNSQueries[i] += u.NCached
 		data.BlockedFiltering[i] += u.NResult[RFiltered]
 		data.ReplacedSafebrowsing[i] += u.NResult[RSafeBrowsing]
 		data.ReplacedParental[i] += u.NResult[RParental]
@@ -549,7 +530,6 @@ func (s *StatsCtx) fillCollectedStatsDaily(
 		day := i / 24
 
 		data.DNSQueries[day] += u.NTotal
-		data.CachedDNSQueries[day] += u.NCached
 		data.BlockedFiltering[day] += u.NResult[RFiltered]
 		data.ReplacedSafebrowsing[day] += u.NResult[RSafeBrowsing]
 		data.ReplacedParental[day] += u.NResult[RParental]

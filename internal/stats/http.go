@@ -42,14 +42,12 @@ type StatsResp struct {
 	TopUpstreamsAvgTime   []topAddrsFloat `json:"top_upstreams_avg_time"`
 
 	DNSQueries []uint64 `json:"dns_queries"`
-	CachedDNSQueries []uint64 `json:"cached_dns_queries"`
 
 	BlockedFiltering     []uint64 `json:"blocked_filtering"`
 	ReplacedSafebrowsing []uint64 `json:"replaced_safebrowsing"`
 	ReplacedParental     []uint64 `json:"replaced_parental"`
 
 	NumDNSQueries           uint64 `json:"num_dns_queries"`
-	NumCachedDNSQueries     uint64 `json:"num_cached_dns_queries"`
 	NumBlockedFiltering     uint64 `json:"num_blocked_filtering"`
 	NumReplacedSafebrowsing uint64 `json:"num_replaced_safebrowsing"`
 	NumReplacedSafesearch   uint64 `json:"num_replaced_safesearch"`

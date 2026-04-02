@@ -83,7 +83,6 @@ func TestStats(t *testing.T) {
 			Client:         cliIPStr,
 			Result:         stats.RFiltered,
 			ProcessingTime: time.Microsecond * 123456,
-			Cached:         true,
 			UpstreamStats: []*proxy.UpstreamStatistics{{
 				Address:       respUpstream,
 				QueryDuration: time.Microsecond * 222222,
@@ -106,10 +105,6 @@ func TestStats(t *testing.T) {
 			TopBlocked:            []map[string]uint64{0: {reqDomain: 1}},
 			TopUpstreamsResponses: []map[string]uint64{0: {respUpstream: 2}},
 			TopUpstreamsAvgTime:   []map[string]float64{0: {respUpstream: 0.222222}},
-			CachedDNSQueries: []uint64{
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-			},
 			DNSQueries: []uint64{
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,
@@ -127,7 +122,6 @@ func TestStats(t *testing.T) {
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			},
 			NumDNSQueries:           2,
-			NumCachedDNSQueries:     1,
 			NumBlockedFiltering:     1,
 			NumReplacedSafebrowsing: 0,
 			NumReplacedSafesearch:   0,
@@ -165,7 +159,6 @@ func TestStats(t *testing.T) {
 			TopBlocked:            []map[string]uint64{},
 			TopUpstreamsResponses: []map[string]uint64{},
 			TopUpstreamsAvgTime:   []map[string]float64{},
-			CachedDNSQueries:      _24zeroes[:],
 			DNSQueries:            _24zeroes[:],
 			BlockedFiltering:      _24zeroes[:],
 			ReplacedSafebrowsing:  _24zeroes[:],
