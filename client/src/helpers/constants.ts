@@ -211,7 +211,26 @@ export const WHOIS_ICONS = {
 export const DEFAULT_LOGS_FILTER = {
     search: '',
     response_status: 'all',
+    dns_type: 'all',
 };
+
+export const DNS_TYPE_FILTER = {
+    ALL: { QUERY: 'all', LABEL: 'all_dns_types' },
+    A: { QUERY: 'A', LABEL: 'dns_type_a' },
+    AAAA: { QUERY: 'AAAA', LABEL: 'dns_type_aaaa' },
+    PTR: { QUERY: 'PTR', LABEL: 'dns_type_ptr' },
+    MX: { QUERY: 'MX', LABEL: 'dns_type_mx' },
+    TXT: { QUERY: 'TXT', LABEL: 'dns_type_txt' },
+    CNAME: { QUERY: 'CNAME', LABEL: 'dns_type_cname' },
+    HTTPS: { QUERY: 'HTTPS', LABEL: 'dns_type_https' },
+    SRV: { QUERY: 'SRV', LABEL: 'dns_type_srv' },
+    SVCB: { QUERY: 'SVCB', LABEL: 'dns_type_svcb' },
+};
+
+export const DNS_TYPE_FILTER_QUERIES = Object.values(DNS_TYPE_FILTER).reduce(
+    (acc: Record<string, boolean>, { QUERY }) => ({ ...acc, [QUERY]: true }),
+    {},
+);
 
 export const DEFAULT_LANGUAGE = 'en';
 

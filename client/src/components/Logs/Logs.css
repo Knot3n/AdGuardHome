@@ -181,7 +181,16 @@
 
 .field__search {
     display: flex;
-    flex-grow: 1;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.field__select {
+    flex: 0 0 220px;
+}
+
+.field__select--dns-type {
+    margin-left: 0.5rem;
 }
 
 @media (max-width: 767.98px) {
@@ -199,6 +208,11 @@
         padding-left: 24px;
         padding-right: 24px;
     }
+
+    .field__select--dns-type {
+        margin-left: 0;
+    }
+
 }
 
 @media screen and (max-width: 767.98px) {

@@ -21,6 +21,8 @@ const (
 	//
 	// See (*searchCriterion).ctFilteringStatusCase for details.
 	ctFilteringStatus
+	// ctDNSRecordType is for searching by the DNS question type.
+	ctDNSRecordType
 )
 
 const (
@@ -115,6 +117,8 @@ func (c *searchCriterion) quickMatch(
 		// Go on, as we currently don't do quick matches against
 		// filtering statuses.
 		return true
+	case ctDNSRecordType:
+		return strings.EqualFold(readJSONValue(line, `"QT":"`), c.value)
 	default:
 		return true
 	}
@@ -127,6 +131,8 @@ func (c *searchCriterion) match(entry *logEntry) bool {
 		return c.ctDomainOrClientCase(entry)
 	case ctFilteringStatus:
 		return c.ctFilteringStatusCase(entry.Result.Reason, entry.Result.IsFiltered)
+	case ctDNSRecordType:
+		return strings.EqualFold(entry.QType, c.value)
 	}
 
 	return false
