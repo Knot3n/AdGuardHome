@@ -9,8 +9,19 @@ import { SearchFormValues } from '../components/Logs';
 
 const getLogsWithParams = async (config: any) => {
     const { older_than, filter, ...values } = config;
-    const rawLogs = await apiClient.getQueryLog({
+    const normalizedFilter = {
         ...filter,
+        dns_type:
+            filter?.dns_type && filter.dns_type !== DEFAULT_LOGS_FILTER.dns_type
+                ? filter.dns_type
+                : undefined,
+        response_status:
+            filter?.response_status && filter.response_status !== DEFAULT_LOGS_FILTER.response_status
+                ? filter.response_status
+                : undefined,
+    };
+    const rawLogs = await apiClient.getQueryLog({
+        ...normalizedFilter,
         older_than,
     });
     const { data, oldest } = rawLogs;
@@ -19,7 +30,7 @@ const getLogsWithParams = async (config: any) => {
         logs: normalizeLogs(data),
         oldest,
         older_than,
-        filter,
+        filter: normalizedFilter,
         ...values,
     };
 };

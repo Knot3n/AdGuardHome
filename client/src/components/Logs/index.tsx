@@ -129,7 +129,7 @@ const Logs = () => {
             );
             setIsLoading(false);
         })();
-    }, [response_status, search]);
+    }, [response_status, search, dns_type]);
 
     const mediaQuery = window.matchMedia(`(max-width: ${MEDIUM_SCREEN_SIZE}px)`);
     const mediaQueryHandler = (e: any) => {
@@ -188,7 +188,7 @@ const Logs = () => {
             (async () => {
                 setIsLoading(true);
 
-                await dispatch(setFilteredLogs());
+                await dispatch(setFilteredLogs(DEFAULT_LOGS_FILTER));
                 setIsLoading(false);
             })();
         }
