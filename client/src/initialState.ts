@@ -199,6 +199,7 @@ export type StatsData = {
     customInterval?: number;
     ignored_enabled: boolean;
     dnsQueries: number[];
+    cachedDnsQueries: number[];
     blockedFiltering: number[];
     replacedParental: number[];
     replacedSafebrowsing: number[];
@@ -212,6 +213,7 @@ export type StatsData = {
     topQueriedDomains: { name: string; count: number }[];
     numBlockedFiltering: number;
     numDnsQueries: number;
+    numCachedDnsQueries: number;
     numReplacedParental: number;
     numReplacedSafebrowsing: number;
     numReplacedSafesearch: number;
@@ -612,6 +614,7 @@ export const initialState: RootState = {
         customInterval: null,
         ignored_enabled: true,
         dnsQueries: [],
+        cachedDnsQueries: [],
         blockedFiltering: [],
         replacedParental: [],
         replacedSafebrowsing: [],
@@ -620,6 +623,7 @@ export const initialState: RootState = {
         topQueriedDomains: [],
         numBlockedFiltering: 0,
         numDnsQueries: 0,
+        numCachedDnsQueries: 0,
         numReplacedParental: 0,
         numReplacedSafebrowsing: 0,
         numReplacedSafesearch: 0,
