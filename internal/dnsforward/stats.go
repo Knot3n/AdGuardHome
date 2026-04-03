@@ -144,16 +144,13 @@ func (s *Server) updateStats(dctx *dnsContext, clientIP string, processingTime t
 	pctx := dctx.proxyCtx
 
 	var upstreamStats []*proxy.UpstreamStatistics
+	cached := false
 	qs := pctx.QueryStatistics()
 	if qs != nil {
-		upstreamStats = append(upstreamStats, qs.Main()...)
+		mainStats := qs.Main()
+		upstreamStats = append(upstreamStats, mainStats...)
 		upstreamStats = append(upstreamStats, qs.Fallback()...)
-	}
-
-	cached := false
-	if qs := pctx.QueryStatistics(); qs != nil {
-		ms := qs.Main()
-		cached = len(ms) == 1 && ms[0].IsCached
+		cached = len(mainStats) == 1 && mainStats[0].IsCached
 	}
 
 	e := &stats.Entry{
