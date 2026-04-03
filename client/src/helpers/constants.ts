@@ -219,12 +219,9 @@ export const DNS_TYPE_FILTER = {
     A: { QUERY: 'A' },
     AAAA: { QUERY: 'AAAA' },
     PTR: { QUERY: 'PTR' },
-    MX: { QUERY: 'MX' },
-    TXT: { QUERY: 'TXT' },
-    CNAME: { QUERY: 'CNAME' },
     HTTPS: { QUERY: 'HTTPS' },
+    TXT: { QUERY: 'TXT' },
     SRV: { QUERY: 'SRV' },
-    SVCB: { QUERY: 'SVCB' },
 };
 
 export const DNS_TYPE_FILTER_QUERIES = Object.values(DNS_TYPE_FILTER).reduce(
