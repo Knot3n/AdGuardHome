@@ -7,6 +7,7 @@ import * as actions from '../actions/stats';
 
 const defaultStats = {
     dnsQueries: [],
+    cachedDnsQueries: [],
     blockedFiltering: [],
     replacedParental: [],
     replacedSafebrowsing: [],
@@ -15,6 +16,7 @@ const defaultStats = {
     topQueriedDomains: [],
     numBlockedFiltering: 0,
     numDnsQueries: 0,
+    numCachedDnsQueries: 0,
     numReplacedParental: 0,
     numReplacedSafebrowsing: 0,
     numReplacedSafesearch: 0,
@@ -66,6 +68,7 @@ const stats = handleActions(
         [actions.getStatsSuccess.toString()]: (state: any, { payload }: any) => {
             const {
                 dns_queries: dnsQueries,
+                cached_dns_queries: cachedDnsQueries,
                 blocked_filtering: blockedFiltering,
                 replaced_parental: replacedParental,
                 replaced_safebrowsing: replacedSafebrowsing,
@@ -74,6 +77,7 @@ const stats = handleActions(
                 top_queried_domains: topQueriedDomains,
                 num_blocked_filtering: numBlockedFiltering,
                 num_dns_queries: numDnsQueries,
+                num_cached_dns_queries: numCachedDnsQueries,
                 num_replaced_parental: numReplacedParental,
                 num_replaced_safebrowsing: numReplacedSafebrowsing,
                 num_replaced_safesearch: numReplacedSafesearch,
@@ -87,6 +91,7 @@ const stats = handleActions(
                 ...state,
                 processingStats: false,
                 dnsQueries,
+                cachedDnsQueries,
                 blockedFiltering,
                 replacedParental,
                 replacedSafebrowsing,
@@ -96,6 +101,7 @@ const stats = handleActions(
                 topQueriedDomains,
                 numBlockedFiltering,
                 numDnsQueries,
+                numCachedDnsQueries,
                 numReplacedParental,
                 numReplacedSafebrowsing,
                 numReplacedSafesearch,
