@@ -645,6 +645,7 @@
   "served_from_cache_label": "Served from cache",
   "served_from_cache_hint": "Number of DNS requests answered directly from the local DNS cache during the selected statistics period.",
   "all_dns_types": "All DNS types",
+  "cached_queries_inline": "({{count}} cached)",
   "service_name": "Service name",
   "set_static_ip": "Set a static IP address",
   "settings": "Settings",
