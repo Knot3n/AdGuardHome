@@ -125,7 +125,7 @@ export const Form = ({ className, setIsLoading }: Props) => {
                     className="form-control custom-select custom-select--logs custom-select__arrow--left form-control--transparent d-sm-block">
                     {Object.values(DNS_TYPE_FILTER).map(({ QUERY, LABEL }: any) => (
                         <option key={QUERY} value={QUERY}>
-                            {t(LABEL)}
+                            {LABEL ? t(LABEL) : QUERY}
                         </option>
                     ))}
                 </select>
