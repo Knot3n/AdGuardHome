@@ -379,11 +379,13 @@ func (l *queryLog) parseSearchCriterion(
 		if !slices.Contains(filteringStatusValues, val) {
 			return false, sc, fmt.Errorf("invalid value %s", val)
 		}
+	case ctDNSRecordType:
+		val = strings.ToUpper(val)
 	default:
 		return false, sc, fmt.Errorf(
 			"invalid criterion type %v: should be one of %v",
 			ct,
-			[]criterionType{ctTerm, ctFilteringStatus},
+			[]criterionType{ctTerm, ctFilteringStatus, ctDNSRecordType},
 		)
 	}
 
@@ -437,6 +439,9 @@ func (l *queryLog) parseSearchParams(
 	}, {
 		urlField: "response_status",
 		ct:       ctFilteringStatus,
+	}, {
+		urlField: "dns_type",
+		ct:       ctDNSRecordType,
 	}} {
 		var ok bool
 		var c searchCriterion

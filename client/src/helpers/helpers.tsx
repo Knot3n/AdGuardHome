@@ -749,7 +749,10 @@ export const replaceZeroWithEmptyString = (value: any) => (parseInt(value, 10) =
 export const getLogsUrlParams = (search: any, response_status: any) =>
     `?${queryString.stringify({
         search: search || undefined,
-        response_status: response_status || undefined,
+        response_status:
+            response_status && response_status !== 'all'
+                ? response_status
+                : undefined,
     })}`;
 
 export const processContent = (content: any) =>

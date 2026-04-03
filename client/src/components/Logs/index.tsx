@@ -33,6 +33,7 @@ import { RootState } from '../../initialState';
 export type SearchFormValues = {
     search: string;
     response_status: string;
+    dns_type: string;
 };
 
 const processContent = (data: any, _buttonType: string) =>
@@ -75,9 +76,11 @@ const Logs = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const { response_status: response_status_url_param, search: search_url_param } = queryString.parse(
-        history.location.search,
-    );
+    const {
+        response_status: response_status_url_param,
+        search: search_url_param,
+        dns_type: dns_type_url_param,
+    } = queryString.parse(history.location.search);
 
     const {
         enabled,
@@ -92,12 +95,14 @@ const Logs = () => {
 
     const search = search_url_param || filter?.search || '';
     const response_status = response_status_url_param || filter?.response_status || '';
+    const dns_type = dns_type_url_param || filter?.dns_type || '';
 
     const formMethods = useForm<SearchFormValues>({
         mode: 'onBlur',
         defaultValues: {
             search: search || DEFAULT_LOGS_FILTER.search,
             response_status: response_status || DEFAULT_LOGS_FILTER.response_status,
+            dns_type: dns_type || DEFAULT_LOGS_FILTER.dns_type,
         },
     });
 
@@ -119,11 +124,12 @@ const Logs = () => {
                 setFilteredLogs({
                     search,
                     response_status,
+                    dns_type,
                 }),
             );
             setIsLoading(false);
         })();
-    }, [response_status, search]);
+    }, [response_status, search, dns_type]);
 
     const mediaQuery = window.matchMedia(`(max-width: ${MEDIUM_SCREEN_SIZE}px)`);
     const mediaQueryHandler = (e: any) => {
@@ -182,7 +188,7 @@ const Logs = () => {
             (async () => {
                 setIsLoading(true);
 
-                await dispatch(setFilteredLogs());
+                await dispatch(setFilteredLogs(DEFAULT_LOGS_FILTER));
                 setIsLoading(false);
             })();
         }

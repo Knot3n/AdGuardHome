@@ -7,10 +7,23 @@ import { DEFAULT_LOGS_FILTER, QUERY_LOGS_PAGE_LIMIT } from '../helpers/constants
 import { addErrorToast, addSuccessToast } from './toasts';
 import { SearchFormValues } from '../components/Logs';
 
+const normalizeLogsFilter = (filter?: SearchFormValues) => ({
+    ...filter,
+    dns_type:
+        filter?.dns_type && filter.dns_type !== DEFAULT_LOGS_FILTER.dns_type
+            ? filter.dns_type
+            : undefined,
+    response_status:
+        filter?.response_status && filter.response_status !== DEFAULT_LOGS_FILTER.response_status
+            ? filter.response_status
+            : undefined,
+});
+
 const getLogsWithParams = async (config: any) => {
     const { older_than, filter, ...values } = config;
+    const normalizedFilter = normalizeLogsFilter(filter);
     const rawLogs = await apiClient.getQueryLog({
-        ...filter,
+        ...normalizedFilter,
         older_than,
     });
     const { data, oldest } = rawLogs;
@@ -19,7 +32,7 @@ const getLogsWithParams = async (config: any) => {
         logs: normalizeLogs(data),
         oldest,
         older_than,
-        filter,
+        filter: normalizedFilter,
         ...values,
     };
 };

@@ -11,6 +11,8 @@ import queryString from 'query-string';
 import {
     DEBOUNCE_FILTER_TIMEOUT,
     DEFAULT_LOGS_FILTER,
+    DNS_TYPE_FILTER,
+    DNS_TYPE_FILTER_QUERIES,
     RESPONSE_FILTER,
     RESPONSE_FILTER_QUERIES,
 } from '../../../helpers/constants';
@@ -36,6 +38,7 @@ export const Form = ({ className, setIsLoading }: Props) => {
 
     const searchValue = watch('search');
     const responseStatusValue = watch('response_status');
+    const dnsTypeValue = watch('dns_type');
 
     const [debouncedSearch, setDebouncedSearch] = useDebounce(searchValue.trim(), DEBOUNCE_FILTER_TIMEOUT);
 
@@ -44,17 +47,26 @@ export const Form = ({ className, setIsLoading }: Props) => {
             setLogsFilter({
                 response_status: responseStatusValue,
                 search: debouncedSearch,
+                dns_type: dnsTypeValue,
             }),
         );
 
-        history.replace(`${getLogsUrlParams(debouncedSearch, responseStatusValue)}`);
-    }, [responseStatusValue, debouncedSearch]);
+        history.replace(
+            `${getLogsUrlParams(debouncedSearch, responseStatusValue)}${dnsTypeValue && dnsTypeValue !== 'all' ? `&dns_type=${encodeURIComponent(dnsTypeValue)}` : ''}`,
+        );
+    }, [responseStatusValue, debouncedSearch, dnsTypeValue]);
 
     useEffect(() => {
         if (responseStatusValue && !(responseStatusValue in RESPONSE_FILTER_QUERIES)) {
             setValue('response_status', DEFAULT_LOGS_FILTER.response_status);
         }
     }, [responseStatusValue, setValue]);
+
+    useEffect(() => {
+        if (dnsTypeValue && !(dnsTypeValue in DNS_TYPE_FILTER_QUERIES)) {
+            setValue('dns_type', DEFAULT_LOGS_FILTER.dns_type);
+        }
+    }, [dnsTypeValue, setValue]);
 
     useEffect(() => {
         const { search: searchUrlParam } = queryString.parse(history.location.search);
@@ -102,6 +114,18 @@ export const Form = ({ className, setIsLoading }: Props) => {
                     {Object.values(RESPONSE_FILTER).map(({ QUERY, LABEL, disabled }: any) => (
                         <option key={LABEL} value={QUERY} disabled={disabled}>
                             {t(LABEL)}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            <div className="field__select field__select--dns-type">
+                <select
+                    {...register('dns_type')}
+                    className="form-control custom-select custom-select--logs custom-select__arrow--left form-control--transparent d-sm-block">
+                    {Object.values(DNS_TYPE_FILTER).map(({ QUERY, LABEL }: any) => (
+                        <option key={QUERY} value={QUERY}>
+                            {LABEL ? t(LABEL) : QUERY}
                         </option>
                     ))}
                 </select>
