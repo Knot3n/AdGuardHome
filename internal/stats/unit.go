@@ -483,7 +483,9 @@ func (s *StatsCtx) dataFromUnits(units []*unitDB, curID uint32) (resp *StatsResp
 	}
 
 	resp.NumDNSQueries = sum.NTotal
-	resp.NumCachedDNSQueries = sum.NCached
+	for _, n := range resp.CachedDNSQueries {
+		resp.NumCachedDNSQueries += n
+	}
 	resp.NumBlockedFiltering = sum.NResult[RFiltered]
 	resp.NumReplacedSafebrowsing = sum.NResult[RSafeBrowsing]
 	resp.NumReplacedSafesearch = sum.NResult[RSafeSearch]
